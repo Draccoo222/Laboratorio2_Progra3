@@ -22,8 +22,9 @@ using std::exception;
 using std::numeric_limits;
 using std::streamsize;
 
-int main()
+int main(int argc, char *argv[])
 {
+    QCoreApplication a(argc, argv);
 
     BookStore store;
     int opt = 0;
@@ -153,6 +154,6 @@ int main()
         }
     }while(opt != 5);
 
-    return 0;
+    return a.exec();
 }
 
