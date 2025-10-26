@@ -45,10 +45,10 @@ int BookStore::searchBookByIsbn(std::string isbn){
            return book_index;
         }
         else if(this->catalogue.at(mid).isbn < arrayI){
-            low = mid - 1;
+            low = mid + 1;
         }
         else{
-            high = mid + 1;
+            high = mid - 1;
         }
     }
     audit.push_front("Search by ISBN: " + isbn + " NOT FOUND. " + getTimeStamp());
@@ -58,22 +58,23 @@ int BookStore::searchBookByIsbn(std::string isbn){
 int BookStore::searchBookByTitle(std::string title){
     int low = 0;
     int high = this->catalogue.size() - 1;
+
     while(high >= low){
 
         int mid = low +(high - low)/2;
 
         if(this->catalogue.at(mid).title == title){
-            audit.push_front("Search by title: " + title + " FOUND. " + getTimeStamp());
+            audit.push_front("Search by title: " + title + " || FOUND. " + getTimeStamp());
             return mid;
         }
         else if(this->catalogue.at(mid).title < title){
-            low = mid - 1;
+            low = mid + 1;
         }
         else{
             high = mid - 1;
         }
     }
-    audit.push_front("Search by title: " + title + " NOT FOUND. " + getTimeStamp());
+    audit.push_front("Search by title: " + title + " || NOT FOUND. " + getTimeStamp());
     return -1;
 }
 

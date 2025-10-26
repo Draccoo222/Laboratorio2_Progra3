@@ -1,4 +1,5 @@
-#include <QCoreApplication> // <-- RE-AGREGADO
+#include <QCoreApplication>
+
 #include "book.h"
 #include "bookstore.h"
 
@@ -7,7 +8,6 @@
 #include <vector>
 #include <array>
 #include <limits>
-#include <stdexcept>
 #include <cctype>
 
 using std::cout;
@@ -34,8 +34,9 @@ int main(int argc, char *argv[])
         cout << "1. Add a Book" << endl;
         cout << "2. Search by Title" << endl;
         cout << "3. Search by ISBN" << endl;
-        cout << "4. Show Auditlog" << endl;
-        cout << "5. Exit" << endl;
+        cout << "4. View Catalogue" << endl;
+        cout << "5. Show Auditlog" << endl;
+        cout << "6. Exit" << endl;
         cout << "Type your option: ";
 
         cin >> opt;
@@ -85,7 +86,7 @@ int main(int argc, char *argv[])
             try {
                 array<int, 13> isbnArray = store.stringToIsbnArray(isbnString);
                 Book newBook(title, author, isbnArray);
-
+                cout << "Book added successfully!" << endl;
                 store.insertBook(newBook);
 
             } catch (const exception& e) {
@@ -105,7 +106,7 @@ int main(int argc, char *argv[])
                 cout << "  Title: " << store.catalogue[index].title << endl;
                 cout << "  Author:  " << store.catalogue[index].author << endl;
             } else {
-                cout << "Libro NO ENCONTRADO." << endl;
+                cout << "Book NOT FOUND." << endl;
             }
             break;
         }
@@ -115,8 +116,20 @@ int main(int argc, char *argv[])
             getline(cin, isbnString);
 
             if (isbnString.length() != 13) {
-                cout << "Error: El ISBN debe tener exactamente 13 digitos.\n";
+                cout << "Error: ISBN must be exactly 13 digits." << endl;
+                break;
+            }
 
+            bool isbnIsValid = true;
+            for (char const &c : isbnString) {
+                if (isdigit(c) == 0) {
+                    cout << "Error: ISBN MAY ONLY CONTAIN INTEGERS." << endl;
+                    isbnIsValid = false;
+                    break;
+                }
+            }
+
+            if (!isbnIsValid) {
                 break;
             }
 
@@ -124,15 +137,15 @@ int main(int argc, char *argv[])
             int index = store.searchBookByIsbn(isbnString);
 
             if (index != -1) {
-                cout << "Libro ENCONTRADO en el indice: " << index << endl;
-                cout << "  Titulo: " << store.catalogue[index].title << endl;
-                cout << "  Autor:  " << store.catalogue[index].author << endl;
+                cout << "Book found at: " << index << endl;
+                cout << "  Title " << store.catalogue[index].title << endl;
+                cout << "  Author:  " << store.catalogue[index].author << endl;
             } else {
-                cout << "Libro NO ENCONTRADO." << endl;
+                cout << "Book not FOUND." << endl;
             }
             break;
         }
-        case 4:
+        case 5:
             cout << "----------- Auditlog -----------" << endl;
 
             if(store.audit.empty()){
@@ -145,14 +158,28 @@ int main(int argc, char *argv[])
             }
             cout << "--------------------------------" << endl;
             break;
-        case 5:
-            cout << "End of Program" << endl;
+        case 4: {
+            cout << "----------- Catalogue -----------" << endl;
+            int i = 0;
+            for(const auto& b: store.catalogue){
+                string isbn = "";
+                for(int j = 0; j < 13; j++){
+                    isbn += std::to_string(b.isbn[j]);
+                }
+                cout << i << ". Title: " << b.title << " || Author: " << b.author << " || ISBN [" << isbn << "]" << endl;
+                i++;
+            }
+            cout << "--------------------------------" << endl;
+            break;
+        }
+        case 6:
+            cout << "END OF PROGRAM." << endl;
             break;
         default:
             cout << "Invalid Input, try again." << endl;
             break;
         }
-    }while(opt != 5);
+    }while(opt != 6);
 
     return a.exec();
 }
