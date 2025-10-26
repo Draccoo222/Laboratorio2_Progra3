@@ -5,6 +5,12 @@
 #include <algorithm>
 #include <numeric>
 
+
+BookStore::BookStore(){
+
+}
+
+
 std::string BookStore::getTimeStamp(){
     time_t tStamp;
     time(&tStamp);
@@ -18,7 +24,7 @@ void BookStore::insertBook(Book b){
 
     std::cout << "Added Book || Title: " << b.title << "|| At: " << getTimeStamp() << std::endl;
 
-    audit.push_back("Added Book || Title: " + b.title + "|| At: " + getTimeStamp());
+    audit.push_front("Added Book || Title: " + b.title + "|| At: " + getTimeStamp());
 }
 
 
@@ -35,6 +41,7 @@ int BookStore::searchBookByIsbn(std::string isbn){
         int book_index = indices.at(mid);
 
         if(this->catalogue.at(mid).isbn == arrayI){
+           audit.push_front("Search by ISBN: " + isbn + " FOUND. " + getTimeStamp());
            return book_index;
         }
         else if(this->catalogue.at(mid).isbn < arrayI){
@@ -44,6 +51,7 @@ int BookStore::searchBookByIsbn(std::string isbn){
             high = mid + 1;
         }
     }
+    audit.push_front("Search by ISBN: " + isbn + " NOT FOUND. " + getTimeStamp());
     return -1;
 }
 
@@ -55,6 +63,7 @@ int BookStore::searchBookByTitle(std::string title){
         int mid = low +(high - low)/2;
 
         if(this->catalogue.at(mid).title == title){
+            audit.push_front("Search by title: " + title + " FOUND. " + getTimeStamp());
             return mid;
         }
         else if(this->catalogue.at(mid).title < title){
@@ -64,6 +73,7 @@ int BookStore::searchBookByTitle(std::string title){
             high = mid - 1;
         }
     }
+    audit.push_front("Search by title: " + title + " NOT FOUND. " + getTimeStamp());
     return -1;
 }
 
